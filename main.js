@@ -130,6 +130,7 @@ function generateBookObject(id, title, author, year, isComplete) {
 function makeBook(bookObject) {
     const bookItem = document.createElement('div');
     bookItem.setAttribute('data-testid', 'bookItem');
+    bookItem.setAttribute('data-bookid', bookObject.id);
 
     const bookTitle = document.createElement('h3');
     bookTitle.setAttribute('data-testid', 'bookItemTitle');
