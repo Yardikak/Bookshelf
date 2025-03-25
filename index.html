@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookshelf App</title>
+
+    <!-- Impor script kamu di sini -->
+    <!-- Lampirkan `defer` jika pemanggilan dilakukan dalam <head> -->
+    <script defer src="main.js"></script>
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #1e1e2f;
+        color: #ffffff;
+        text-align: center;
+      }
+    
+      header {
+        background: linear-gradient(135deg, #ff8c00, #ff3b3b);
+        padding: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      }
+    
+      main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #2a2a3b;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      }
+    
+      section {
+        margin-bottom: 30px;
+        padding: 15px;
+        border-radius: 10px;
+        background: #3a3a4f;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      }
+    
+      h2 {
+        color: #ffcc00;
+      }
+    
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+        background: #2a2a3b;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        width: 80%;
+        max-width: 500px;
+        margin: auto;
+      }
+
+      .toast {
+        visibility: hidden;
+        min-width: 250px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        padding: 10px;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+      }
+      .toast.show {
+        visibility: visible;
+        animation: fadeInOut 3s;
+      }
+      @keyframes fadeInOut {
+        0% {opacity: 0;}
+        20% {opacity: 1;}
+        80% {opacity: 1;}
+        100% {opacity: 0;}
+      }
+
+      label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffcc00;
+        text-align: center;
+        width: 100%;
+      }
+
+      input[type="text"], 
+      input[type="number"] {
+        width: 90%;
+        padding: 12px;
+        border: 2px solid #ffcc00;
+        border-radius: 8px;
+        background: #3a3a4f;
+        color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s;
+      }
+
+      input[type="text"]:focus, 
+      input[type="number"]:focus {
+        border-color: #ff8c00;
+        background: #444;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ffcc00, #ff8c00);
+        color: #222;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+      }
+
+      button:hover {
+        background: linear-gradient(135deg, #ff3b3b, #ff8c00);
+        color: white;
+        transform: scale(1.05);
+      }
+
+    
+      /* Bookshelf Lists */
+      #incompleteBookList, #completeBookList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    
+      [data-testid="bookItem"] {
+        background: #444;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: left;
+      }
+    
+      [data-testid="bookItem"] h3 {
+        color: #ffcc00;
+      }
+    
+      [data-testid="bookItem"] p {
+        margin: 5px 0;
+      }
+    
+      [data-testid="bookItem"] div {
+        display: flex;
+        gap: 10px;
+      }
+    
+      [data-testid="bookItemDeleteButton"] {
+        background: #ff3b3b;
+      }
+    
+      [data-testid="bookItemDeleteButton"]:hover {
+        background: #cc0000;
+      }
+    </style>
+    
+  </head>
+  <body>
+    <header>
+      <h1>Bookshelf App</h1>
+    </header>
+
+    <main>
+      <div id="toast" class="toast"></div>
+      <section>
+        <h2>Tambah Buku Baru</h2>
+        <form id="bookForm" data-testid="bookForm">
+          <div>
+            <label for="bookFormTitle">Judul</label>
+            <input id="bookFormTitle" type="text" required data-testid="bookFormTitleInput" />
+          </div>
+          <div>
+            <label for="bookFormAuthor">Penulis</label>
+            <input id="bookFormAuthor" type="text" required data-testid="bookFormAuthorInput" />
+          </div>
+          <div>
+            <label for="bookFormYear">Tahun</label>
+            <input id="bookFormYear" type="number" required data-testid="bookFormYearInput" />
+          </div>
+          <div>
+            <label for="bookFormIsComplete">Selesai dibaca</label>
+            <input
+              id="bookFormIsComplete"
+              type="checkbox"
+              data-testid="bookFormIsCompleteCheckbox"
+            />
+          </div>
+          <button id="bookFormSubmit" type="submit" data-testid="bookFormSubmitButton">
+            Masukkan Buku ke rak <span>Belum selesai dibaca</span>
+          </button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Cari Buku</h2>
+        <form id="searchBook" data-testid="searchBookForm">
+          <label for="searchBookTitle">Judul</label>
+          <input id="searchBookTitle" type="text" data-testid="searchBookFormTitleInput" />
+          <button id="searchSubmit" type="submit" data-testid="searchBookFormSubmitButton">
+            Cari
+          </button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Belum selesai dibaca</h2>
+
+        <div id="incompleteBookList" data-testid="incompleteBookList">
+          <!-- 
+            Ini adalah struktur HTML untuk masing-masing buku.
+            Pastikan susunan elemen beserta atribut data-testid menyesuaikan seperti contoh ini.
+          -->
+          <div data-bookid="123123123" data-testid="bookItem">
+            <h3 data-testid="bookItemTitle">Judul Buku 1</h3>
+            <p data-testid="bookItemAuthor">Penulis: Penulis Buku 1</p>
+            <p data-testid="bookItemYear">Tahun: 2030</p>
+            <div>
+              <button data-testid="bookItemIsCompleteButton">Selesai dibaca</button>
+              <button data-testid="bookItemDeleteButton">Hapus Buku</button>
+              <button data-testid="bookItemEditButton">Edit Buku</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Selesai dibaca</h2>
+
+        <div id="completeBookList" data-testid="completeBookList">
+          <!-- 
+            Ini adalah struktur HTML untuk masing-masing buku.
+            Pastikan susunan elemen beserta atribut data-testid menyesuaikan seperti contoh ini.
+          -->
+          <div data-bookid="456456456" data-testid="bookItem">
+            <h3 data-testid="bookItemTitle">Judul Buku 2</h3>
+            <p data-testid="bookItemAuthor">Penulis: Penulis Buku 2</p>
+            <p data-testid="bookItemYear">Tahun: 2030</p>
+            <div>
+              <button data-testid="bookItemIsCompleteButton">Selesai dibaca</button>
+              <button data-testid="bookItemDeleteButton">Hapus Buku</button>
+              <button data-testid="bookItemEditButton">Edit Buku</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
